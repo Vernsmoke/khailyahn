@@ -1,0 +1,492 @@
+/* Sentry design trial: docs/DESIGN-sentry.md.
+   Imported after the previous theme so this preview can be removed as one layer.
+   Product layouts, semantic status colors and navigation motion are retained. */
+:root {
+  --bg: #f8f7fb;
+  --surface: #fff;
+  --surface-soft: #f5f3f8;
+  --surface-2: #eeeaf4;
+  --border: #ddd7e7;
+  --hairline-soft: #e8e3ee;
+  --text: #1f1633;
+  --muted: #51475d;
+  --blue: #150f23;
+  --blue-hover: #362d59;
+  --link: #5949a3;
+  --on-primary: #fff;
+  --control-bg: #fff;
+  --control-hover: #f0edf6;
+  --control-ink: #1f1633;
+  --control-border: #b8aec8;
+  --control-shadow: none;
+  --control-focus: #7967ca;
+  --focus-halo: #9dc1f540;
+  --navigation-ink: #1f1633;
+  --navigation-bg: #fff;
+  --navigation-hover: #eee9f6;
+  --navigation-edge: #ddd7e7;
+  --navigation-glass: #fff;
+  --chart-secondary: #a8476b;
+  --radius: 12px;
+  --radius-input: 6px;
+  --radius-pill: 8px;
+  --sentry-lime: #c2ef4e;
+  --sentry-pink: #fa7faa;
+  --sentry-violet: #6a5fc1;
+  --photo-scrim: rgb(248 247 251 / 49%);
+  --photo-ink: #0c0814;
+}
+
+:root[data-theme="dark"] {
+  --bg: #1f1633;
+  --surface: #150f23;
+  --surface-soft: #261c3b;
+  --surface-2: #302443;
+  --border: #47395d;
+  --hairline-soft: #362d59;
+  --text: #fff;
+  --muted: #c9c1d4;
+  --blue: #fff;
+  --blue-hover: #efefef;
+  --link: #c9c0f5;
+  --on-primary: #1f1633;
+  --control-bg: #302443;
+  --control-hover: #3f3154;
+  --control-ink: #fff;
+  --control-border: #79628c;
+  --control-focus: #9dc1f5;
+  --navigation-ink: #e9e2f1;
+  --navigation-bg: #150f23;
+  --navigation-hover: #35224e;
+  --navigation-edge: #47395d;
+  --navigation-glass: #150f23;
+  --chart-secondary: #fa7faa;
+  --positive-bg: #193b32;
+  --negative-bg: #422332;
+  --warning-bg: #3d3421;
+  --photo-scrim: rgb(31 22 51 / 65%);
+  --photo-ink: #fff;
+}
+
+body {
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* Approved image pairs: equipment for sign-in, gym interior for the workspace.
+   The dark image fades over the light image; a tint protects foreground copy. */
+html:root[data-theme] .gym-background {
+  --scene-light: url("/backgrounds/sentry-gym-light.webp");
+  --scene-dark: url("/backgrounds/sentry-gym-dark.webp");
+}
+html:root[data-theme] .login-scene {
+  --scene-light: url("/backgrounds/sentry-equipment-light.webp");
+  --scene-dark: url("/backgrounds/sentry-equipment-dark.webp");
+}
+html:root[data-theme] :is(.gym-background, .login-scene) {
+  background-color: var(--bg);
+  background-image: var(--scene-light);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+html:root[data-theme] :is(.gym-background, .login-scene)::before {
+  background-color: var(--bg);
+  background-image: var(--scene-dark);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0;
+}
+html:root[data-theme="dark"] :is(.gym-background, .login-scene)::before {
+  opacity: 1;
+}
+html:root[data-theme] :is(.gym-background, .login-scene)::after {
+  background: var(--photo-scrim);
+}
+/* Copy directly over photography uses deeper ink. Panel copy keeps
+   its existing hierarchy and opaque surfaces. */
+html:root[data-theme]
+  :is(
+    .login-welcome .login-welcome-eyebrow,
+    .login-welcome .login-welcome-copy,
+    .login-refreshed .login-footer,
+    .app-layout .app-footer,
+    .app-layout .page-heading p,
+    .app-layout .page-heading .back-link,
+    .app-layout .page-heading > .badge.neutral,
+    .app-layout .staff-access-note,
+    .app-layout .gentle-note p,
+    .app-layout .gentle-note h3,
+    .app-layout .report-filters label,
+    .app-layout .page-note,
+    .app-layout .section-caption,
+    .app-layout .content > .muted
+  ) {
+  color: var(--photo-ink);
+}
+html:root[data-theme]
+  .app-layout
+  :is(.panel, .metrics-grid, .quick-panel, .scan-result, .info-strip) {
+  background: var(--surface);
+  border: 1px solid var(--hairline-soft);
+  border-radius: 12px;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+html:root[data-theme] :is(.modal, .calendar-dialog) {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 16px 48px #150f2326;
+}
+html:root[data-theme="dark"] :is(.modal, .calendar-dialog) {
+  box-shadow: none;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+.page-heading h1 {
+  font-size: clamp(28px, 2.8vw, 40px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+.panel-heading h2 {
+  font-size: 20px;
+  font-weight: 500;
+}
+.sentry-keyword {
+  display: inline;
+  padding: 0 0.15em;
+  border-radius: 4px;
+  background: var(--sentry-lime);
+  color: #1f1633;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.heading-dot {
+  color: var(--text);
+}
+.metric > strong,
+.chart-summary strong {
+  font-weight: 600;
+  letter-spacing: -0.04em;
+}
+.metric-icon {
+  color: var(--sentry-violet);
+}
+:root[data-theme="dark"] .metric-icon {
+  color: #baaae1;
+}
+.app-layout .metric {
+  border-color: var(--border);
+}
+
+html:root[data-theme] .app-layout :is(.sidebar, .topbar) {
+  background: var(--navigation-bg);
+  border: 1px solid var(--navigation-edge);
+  border-radius: 12px;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.app-layout .sidebar .nav-label {
+  font-size: 15px;
+  font-weight: 500;
+}
+.app-layout .sidebar .nav-group {
+  color: var(--muted);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.app-layout .sidebar .nav-icon {
+  background: transparent;
+  border-color: transparent;
+}
+.app-layout .sidebar .nav-link.active {
+  background: var(--navigation-hover);
+  color: var(--navigation-ink);
+}
+html:root[data-theme] .app-layout .sidebar .nav-link.active .nav-icon {
+  background: #422082;
+  color: #fff;
+  border-color: transparent;
+}
+.app-layout .brand-name {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.app-layout .brand-name small {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+.app-layout .sidebar-tooltip {
+  background: #150f23;
+  color: #fff;
+  border: 1px solid #79628c;
+  border-radius: 6px;
+}
+.app-layout .topbar {
+  margin-inline: 16px;
+  position: static;
+  top: auto;
+}
+html:root[data-theme] .app-layout .avatar {
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+/* Uppercase actions and compact shapes match the supplied component tokens. */
+html:root[data-theme]
+  :is(.button, .text-button, .icon-button, .tabs button):not(
+    :where(.topbar *, .sidebar-close, .login-theme-control *, .password-input *)
+  ) {
+  background: var(--control-bg);
+  color: var(--control-ink);
+  border: 1px solid var(--control-border);
+  border-radius: 8px;
+  box-shadow: none;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  line-height: 1.3;
+}
+html:root[data-theme] :is(.button, .text-button) {
+  text-transform: uppercase;
+}
+html:root[data-theme] .tabs button {
+  text-transform: none;
+}
+html:root[data-theme]
+  :is(.button, .text-button, .icon-button, .tabs button):not(
+    :where(.topbar *, .sidebar-close, .login-theme-control *, .password-input *)
+  ):not(:disabled):hover {
+  background: var(--control-hover);
+  color: var(--control-ink);
+  border-color: var(--control-border);
+  box-shadow: none;
+}
+html:root[data-theme] :is(.button, .icon-button, .tabs button):disabled {
+  background: var(--surface-2);
+  color: var(--muted);
+  border: 1px dashed var(--control-border);
+  box-shadow: none;
+}
+html:root[data-theme] .app-layout .tabs {
+  background: var(--surface-2);
+  border-radius: 8px;
+}
+html:root[data-theme]
+  :is(
+    input:not([type="checkbox"]):not([type="radio"]),
+    select,
+    textarea,
+    .search
+  ) {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--control-border);
+  border-radius: 6px;
+  box-shadow: none;
+}
+html:root[data-theme] .app-layout .search input {
+  border: 0;
+  background: transparent;
+}
+html:root[data-theme] :is(input, select, textarea):focus,
+html:root[data-theme] .search:focus-within {
+  outline: 2px solid var(--control-focus);
+  outline-offset: 3px;
+  box-shadow: none;
+}
+html:root[data-theme] .app-layout .panel table th {
+  background: var(--surface-soft);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.035em;
+}
+html:root[data-theme]
+  .app-layout
+  :is(.fee-display, .profile-entitlements > div) {
+  background: var(--surface-soft);
+}
+html:root[data-theme] .app-layout :is(tbody tr:hover, .alert-item:hover) {
+  background: var(--surface-soft);
+}
+.revenue-series {
+  color: var(--sentry-violet);
+}
+.monthly-series {
+  color: var(--chart-secondary);
+}
+.app-layout .text-link svg {
+  border-radius: 6px;
+}
+.app-layout .quick-panel {
+  padding: 28px;
+}
+.app-layout .app-footer {
+  position: relative;
+  padding-top: 24px;
+  margin-inline: 16px;
+  border: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.app-layout .app-footer::before,
+.login-refreshed .login-footer::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: url("/backgrounds/sentry-squiggle.svg") repeat-x left center;
+}
+
+/* Sign-in retains its two-column structure and animated welcome. */
+html:root[data-theme] .login-page.login-refreshed .login-card {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 40px 32px 28px;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.login-refreshed .login-layout {
+  max-width: 1152px;
+}
+.login-welcome .login-welcome-eyebrow {
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+}
+.login-welcome h2 {
+  font-size: clamp(46px, 5.4vw, 76px);
+  font-weight: 700;
+  line-height: 1.14;
+  letter-spacing: -0.045em;
+  min-height: 2.3em;
+  text-wrap: initial;
+}
+.login-welcome .login-welcome-copy {
+  font-size: 16px;
+  line-height: 2;
+  color: var(--muted);
+}
+.login-refreshed .login-logo {
+  border-radius: 8px;
+  width: 84px;
+  height: 76px;
+}
+.login-refreshed .login-card h1 {
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: -0.025em;
+}
+.login-refreshed .login-card .login-gym-name {
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+html:root[data-theme] .login-refreshed .login-card input {
+  background: var(--surface);
+  border: 1px solid var(--control-border);
+  border-radius: 6px;
+  font-size: 16px;
+  padding-inline: 12px;
+}
+html:root[data-theme] .login-refreshed .login-card .password-input input {
+  padding-right: 52px;
+}
+html:root[data-theme] .login-page.login-refreshed .login-card .button.primary {
+  background: var(--blue);
+  color: var(--on-primary);
+  border: 1px solid var(--blue);
+  min-height: 48px;
+}
+html:root[data-theme]
+  .login-page.login-refreshed
+  .login-card
+  .button.primary:hover {
+  background: var(--blue-hover);
+}
+.login-refreshed .login-theme-control .theme-toggle {
+  background: var(--surface);
+  border-radius: 8px;
+  backdrop-filter: none;
+}
+.login-refreshed .login-footer {
+  position: relative;
+  padding-top: 24px;
+  font-size: 12px;
+}
+
+@media (min-width: 901px) {
+  html:root[data-theme] .nav-collapsed .sidebar {
+    border-radius: 18px;
+  }
+  html:root[data-theme] .nav-collapsed .sidebar .nav-link.active {
+    background: var(--navigation-hover);
+    color: var(--navigation-ink);
+  }
+  html:root[data-theme] .nav-collapsed .sidebar .nav-link .nav-icon {
+    background: transparent;
+    color: inherit;
+    border: 0;
+  }
+}
+@media (max-width: 850px) {
+  .login-welcome h2 {
+    font-size: clamp(32px, 6vw, 48px);
+    min-height: 2.3em;
+  }
+  .login-welcome .login-welcome-copy {
+    margin-inline: auto;
+  }
+}
+@media (max-width: 600px) {
+  .page-heading h1 {
+    font-size: 28px;
+  }
+  html:root[data-theme] .login-page.login-refreshed .login-card {
+    padding: 28px 24px;
+  }
+  .login-welcome .login-welcome-eyebrow {
+    margin-bottom: 16px;
+  }
+  .login-welcome h2 {
+    min-height: 2.3em;
+    font-size: clamp(30px, 8vw, 40px);
+  }
+  .login-welcome .login-welcome-copy {
+    margin-top: 16px;
+  }
+  .app-layout .topbar {
+    margin-inline: 8px;
+  }
+}
+@media (forced-colors: active) {
+  .sentry-keyword {
+    background: Highlight;
+    color: HighlightText;
+  }
+  html:root[data-theme] :is(.gym-background, .login-scene) {
+    display: none;
+  }
+  html:root[data-theme] :is(.panel, .sidebar, .topbar, .modal, .login-card) {
+    border: 1px solid CanvasText;
+  }
+}
