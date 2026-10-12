@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Run Gym Management on This PC</title>
+  <style>
+    :root{color-scheme:light;--ink:#172026;--muted:#5d6972;--line:#dbe2e7;--accent:#087f5b;--soft:#edf8f4;--warn:#fff5d6}*{box-sizing:border-box}body{margin:0;background:#f3f6f7;color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}main{max-width:900px;margin:32px auto;padding:32px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 12px 36px #17202612}h1{margin:0 0 8px;font-size:clamp(2rem,5vw,3.2rem);line-height:1.05}h2{margin-top:36px;padding-top:8px;border-top:1px solid var(--line)}p{max-width:72ch}.lead{font-size:1.1rem;color:var(--muted)}.ok,.note,.warning{padding:14px 16px;border-radius:10px}.ok,.note{background:var(--soft);border-left:4px solid var(--accent)}.warning{background:var(--warn);border-left:4px solid #d99b00}code,pre{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}code{background:#edf1f3;padding:.12em .35em;border-radius:5px}pre{overflow:auto;background:#172026;color:#f7faf9;padding:16px;border-radius:10px;white-space:pre-wrap}li{margin:.55rem 0}a{color:#076c50}table{width:100%;border-collapse:collapse}th,td{text-align:left;vertical-align:top;padding:10px;border-bottom:1px solid var(--line)}kbd{border:1px solid #aab3b9;border-bottom-width:2px;border-radius:4px;padding:1px 6px;background:#fff}footer{margin-top:38px;color:var(--muted);font-size:.9rem}@media(max-width:650px){main{margin:0;padding:22px;border:0;border-radius:0}}
+  </style>
+</head>
+<body><main>
+  <h1>Run Gym Management on this PC</h1>
+  <p class="lead">Use this guide to test the separate Hostinger edition on any Windows computer before uploading it. The folder can be extracted anywhere; the commands do not depend on a Windows username or Downloads location.</p>
+  <p class="ok"><strong>Safe test setup:</strong> use a new database named <code>gym_hostinger_local</code>. Do not use your current gym database or a Hostinger production database.</p>
+
+  <h2>0. Download, extract, and install the local software</h2>
+  <ol>
+    <li>Download <code>DOWNLOAD-Gym-Management-Hostinger.zip</code> onto the other computer.</li>
+    <li>Right-click it, choose <strong>Extract All</strong>, and open the extracted <code>Gym Management Hostinger</code> folder. Do not run the project while it is still inside the ZIP.</li>
+    <li>Install the Windows PHP 8.2 version of XAMPP from the <a href="https://www.apachefriends.org/download.html">official Apache Friends download page</a>. The normal install location is <code>C:\xampp</code>.</li>
+  </ol>
+  <p>If XAMPP is installed somewhere else, replace <code>C:\xampp</code> in the commands below with that location.</p>
+
+  <h2>Enable and check the required PHP extensions</h2>
+  <p>The app needs PDO MySQL, mbstring, GD, and fileinfo. In some XAMPP installations GD starts disabled:</p>
+  <ol>
+    <li>Close any running local PHP server.</li>
+    <li>Open <code>C:\xampp\php\php.ini</code> in a text editor. If Windows refuses to save it, open the editor as Administrator.</li>
+    <li>Find <code>;extension=gd</code>. If it begins with a semicolon, remove the semicolon so it reads <code>extension=gd</code>.</li>
+    <li>Save the file and restart Apache if it was running.</li>
+    <li>In PowerShell, run this check:</li>
+  </ol>
+  <pre>C:\xampp\php\php.exe -r 'foreach (["pdo_mysql","mbstring","gd","fileinfo"] as $e) echo $e, ": ", extension_loaded($e) ? "enabled" : "DISABLED", PHP_EOL;'</pre>
+  <p>All four lines should say <code>enabled</code>.</p>
+
+  <h2>1. Start MySQL</h2>
+  <ol>
+    <li>Open <strong>XAMPP Control Panel</strong>.</li>
+    <li>Click <strong>Start</strong> beside <strong>MySQL</strong>.</li>
+    <li>For the easiest database import, also start <strong>Apache</strong>, then open <a href="http://localhost/phpmyadmin/">http://localhost/phpmyadmin/</a>.</li>
+  </ol>
+  <p>If MySQL will not start, another MySQL service may already be using port 3306. Do not delete any MySQL data folders. Check the XAMPP log first.</p>
+
+  <h2>2. Create an empty local database</h2>
+  <ol>
+    <li>In phpMyAdmin, select <strong>Databases</strong>.</li>
+    <li>Enter <code>gym_hostinger_local</code>.</li>
+    <li>Select collation <code>utf8mb4_unicode_ci</code>, then click <strong>Create</strong>.</li>
+    <li>Select the new database and choose <strong>Import</strong>.</li>
+    <li>Click <strong>Choose File</strong>. Open the extracted project folder, then select <code>database\schema.sql</code>.</li>
+    <li>Click <strong>Import</strong> or <strong>Go</strong>. Tables including <code>member</code>, <code>payment</code>, and <code>user_account</code> should appear.</li>
+  </ol>
+  <p class="warning"><strong>Import this file only into a new empty test database.</strong> It is an initial schema, not an update script.</p>
+
+  <h2>3. Create the local private configuration</h2>
+  <ol>
+    <li>In File Explorer, open the extracted <code>Gym Management Hostinger</code> folder. Click the address bar, type <code>powershell</code>, and press Enter. This opens PowerShell in the correct folder regardless of where you extracted it.</li>
+    <li>Run these commands:</li>
+  </ol>
+  <pre>Copy-Item "server\config.example.php" "server\config.php"
+C:\xampp\php\php.exe -r "echo bin2hex(random_bytes(24)), PHP_EOL;"</pre>
+  <p>Copy the random value printed by the last command. Open <code>server\config.php</code> in Notepad and use these local values:</p>
+  <pre>&lt;?php
+return [
+ 'db_host' =&gt; 'localhost',
+ 'db_port' =&gt; 3306,
+ 'db_name' =&gt; 'gym_hostinger_local',
+ 'db_user' =&gt; 'root',
+ 'db_password' =&gt; '',
+ 'app_origin' =&gt; 'http://127.0.0.1:8097',
+ 'cookie_secure' =&gt; false,
+ 'setup_token' =&gt; 'PASTE_THE_RANDOM_VALUE_HERE',
+];</pre>
+  <p>XAMPP normally uses local user <code>root</code> with an empty password. If you previously added a MySQL password, enter it in <code>db_password</code>.</p>
+
+  <h2>4. Start the website</h2>
+  <p>Double-click <code>START-LOCAL-SERVER.cmd</code>. You can also run this command from PowerShell opened in the extracted project folder:</p>
+  <pre>C:\xampp\php\php.exe -S 127.0.0.1:8097 -t public_html tests/router.php</pre>
+  <p>Keep that PowerShell window open. A line containing <code>Development Server started</code> means the local website is running.</p>
+
+  <h2>5. Create your first test administrator</h2>
+  <ol>
+    <li>Open <a href="http://127.0.0.1:8097/setup.html">http://127.0.0.1:8097/setup.html</a>.</li>
+    <li>Enter the random setup token from step 3.</li>
+    <li>Create a test administrator name, username, and password. The password must contain 12–128 characters.</li>
+    <li>After setup succeeds, sign in at <a href="http://127.0.0.1:8097/login">http://127.0.0.1:8097/login</a>.</li>
+  </ol>
+  <p>The setup endpoint becomes unavailable after the first account is created. This is expected.</p>
+
+  <h2>6. Test the important workflows</h2>
+  <ul>
+    <li>Register a sample member and upload a small photo.</li>
+    <li>Confirm annual-only membership is denied at entry until a monthly payment exists.</li>
+    <li>Record a monthly payment and confirm QR entry becomes approved.</li>
+    <li>Create a Staff account and confirm it cannot open administrator-only pages.</li>
+    <li>Refresh direct pages such as <code>/members</code>.</li>
+    <li>Test the scanner with manual QR text first. Camera access on localhost depends on browser permissions and available hardware.</li>
+  </ul>
+
+  <h2>7. Stop and restart later</h2>
+  <p>Press <kbd>Ctrl</kbd> + <kbd>C</kbd> in the PowerShell server window to stop the website. Stop MySQL and Apache from XAMPP when you no longer need them.</p>
+  <p>To run it again later, start MySQL and double-click <code>START-LOCAL-SERVER.cmd</code>. Your test data remains in <code>gym_hostinger_local</code>.</p>
+
+  <h2>Troubleshooting</h2>
+  <table>
+    <tr><th>Problem</th><th>What to check</th></tr>
+    <tr><td>Database connection error</td><td>MySQL is running; database name, user, password, and port in <code>server\config.php</code> are correct.</td></tr>
+    <tr><td>Origin verification failed</td><td>Open exactly <code>http://127.0.0.1:8097</code>. Do not substitute <code>localhost</code> unless you also change <code>app_origin</code>.</td></tr>
+    <tr><td>Port 8097 already in use</td><td>Use another port in both the server command and <code>app_origin</code>, for example 8099.</td></tr>
+    <tr><td>Setup token rejected</td><td>Copy it exactly and confirm it is saved inside <code>server\config.php</code>. Setup works only before the first account exists.</td></tr>
+    <tr><td>Blank/error page</td><td>Read the message in the PowerShell server window. Confirm PHP extensions <code>pdo_mysql</code>, <code>mbstring</code>, <code>gd</code>, and <code>fileinfo</code> are enabled.</td></tr>
+    <tr><td>XAMPP is not found</td><td>Install it in <code>C:\xampp</code>, or edit <code>PHP_EXE</code> near the top of <code>START-LOCAL-SERVER.cmd</code> to use your PHP location.</td></tr>
+  </table>
+
+  <h2>Before uploading to Hostinger</h2>
+  <p>Local <code>server\config.php</code> is for that PC only and is excluded from every supplied ZIP. Hostinger needs a new production database and a new private <code>config.php</code> using the Hostinger credentials, HTTPS domain, and <code>cookie_secure =&gt; true</code>. Follow <code>START-HERE.html</code> for deployment.</p>
+  <footer>Local test guide · KHA-IL-YAHN Gym Hostinger edition</footer>
+</main></body></html>
