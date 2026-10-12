@@ -1,0 +1,27 @@
+Options -Indexes
+DirectoryIndex index.html
+RewriteEngine On
+RewriteRule ^(?:server|database|frontend|tools|tests)(?:/|$) - [F,L,NC]
+RewriteRule (^|/)\. - [F,L]
+RewriteRule ^api(?:/.*)?$ api.php [END,QSA]
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+RewriteRule ^ index.html [END]
+<IfModule mod_headers.c>
+Header onsuccess unset X-Content-Type-Options
+Header onsuccess unset X-Frame-Options
+Header onsuccess unset Referrer-Policy
+Header always set X-Content-Type-Options "nosniff"
+Header always set X-Frame-Options "DENY"
+Header always set Referrer-Policy "same-origin"
+Header always set Permissions-Policy "camera=(self), microphone=(), geolocation=()"
+Header always set X-Robots-Tag "noindex, nofollow"
+Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; media-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"
+<FilesMatch "\.(html|php)$">
+Header onsuccess unset Cache-Control
+Header always set Cache-Control "no-store"
+</FilesMatch>
+</IfModule>
+
+
