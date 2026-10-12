@@ -1,0 +1,9 @@
+Generated with the built-in image_gen tool.
+
+Use case: photorealistic-natural.
+Asset type: wide photographic background for the KHA-IL-YAHN Fitness GYM web app sign-in screen, image asset only.
+Primary request: create an elegant, believable empty strength-training gym interior in a warm cream and charcoal palette.
+Scene: an immaculate but approachable neighborhood strength gym, matte charcoal steel squat racks and cable machines along the back and right side, a neat dumbbell rack, a flat workout bench, warm pale concrete walls, dark rubber flooring, tall windows admitting soft early morning sunlight. Realistic physically plausible equipment, natural wear and tactile materials.
+Composition: single continuous landscape photograph, wide 16:9 composition at high resolution. Architectural editorial photography at eye level with a 28 mm lens and natural straight verticals. Keep the left third visually quiet with a softly lit pale wall and subdued shadow for welcome headline overlay. Place most equipment on the right and along the lower edge, maintain a calm uncluttered central area suitable behind an opaque sign-in card. Use generous depth and a coherent realistic room; make image usable with responsive center cropping.
+Lighting and mood: gentle warm morning daylight, restrained natural contrast, inviting, grounded and focused, premium editorial photography, subtle warm neutral grading, charcoal and ivory tones, minimal muted color.
+Constraints: photograph only, no UI, no text, no lettering, no logos, no watermarks, no people, no collage or split views, no neon lighting, no extreme dramatic effects, no excessive orange cast, no artificial blur, no distorted gym equipment. Full bleed opaque image.
