@@ -1,0 +1,7 @@
+node_modules/
+server/config.php
+gym-private/config.php
+test-runtime/
+test-results/
+*.zip
+
