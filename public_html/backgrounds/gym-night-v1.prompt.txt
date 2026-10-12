@@ -1,0 +1,9 @@
+Generated with the built-in image_gen tool using gym-morning-v1.png as the edit target.
+
+Use case: lighting-weather.
+Asset type: dedicated dark-mode photographic background for a gym web app login page.
+Edit target: the attached morning gym photograph. Generate a matching nighttime version of this exact room.
+Change only lighting, time of day, and the wall finish's perceived color under night lighting. Preserve the exact camera angle, wide aspect ratio, room geometry, equipment arrangement, benches, racks, dumbbells, plant, floor and window structure so the two theme images align perfectly.
+Replace daylight and sunlit windows with a deep blue-black night exterior, barely visible trees in silhouette. Illuminate the gym using subdued indirect neutral-white architectural light from off-camera overhead sources. This must be a believable gym at night with matte charcoal equipment, dark warm-gray walls, cool quiet highlights on metal and rubber, subtle material texture and clearly visible equipment silhouettes. Remove ALL daytime golden rays and orange tint. The nighttime image must have a distinctly charcoal/cool slate palette and realistic new lighting, not the morning image covered by a dark filter.
+The left wall area is reserved for white welcome text and must stay evenly dark charcoal without bright patches, and the floor along the bottom stays dark for white footer text. No bright ceiling fixtures in frame, no luminous windows, no glowing LED lines, no blown highlights. Restrained low-key exposure across the frame, gentle shadow detail, max brightness in surfaces around muted mid-gray. The right side can have subtle soft rim lighting that reveals equipment without making any bright area. Keep composition continuous and sharp, premium natural editorial architecture photography, not a UI mockup.
+Constraints: no people, no text, no logos, no watermark, no neon effects, no collage, no new or rearranged equipment. Opaque full-bleed image.
